@@ -1,30 +1,44 @@
 import cv2
+import mediapipe as mp
+from mediapipe.tasks import python
+from mediapipe.tasks.python import vision
 
 
 """
-This function accepts a BGR image (should contain at least one recognizable human face)
-and places a bounding box around all faces detected in the image.
-
-Adapted from TutorialsPoint: 
-https://www.tutorialspoint.com/how-to-detect-a-face-and-draw-a-bounding-box-around-it-using-opencv-python
-
-Tasks: replace with a different classifier (YOLO?)
+This function accepts a BGR image and places bounding boxes around all faces detected in the image.
 """
 def find_faces(img):
 
-    # Convert image to grayscale (note BGR color scheme)
-    gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # Initialize MediaPipe face detection functionality
+    mp_face_detection = mp.solutions.face_detection
 
-    # Haar cascade detects faces in input image
-    hc = cv2.CascadeClassifier("haarcascade_frontalface_alt.xml")
+    # Create an instance of MediaPipe face detection model
+    face_detection = mp_face_detection.FaceDetection(min_detection_confidence = 0.5)
+
+    # Convert the image to RGB
+    rgb_image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     # Detect faces
-    faces = hc.detectMultiScale(gray_img, 1.1, 2)
+    results = face_detection.process(rgb_image)
 
-    # Place bounding boxes around all detected faces
-    for (x, y, w, h) in faces:
-        cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 255), 2)
-    
-    # Function returns the modified image
+    # Determine if any faces were detected
+    if results.detections:
+
+        # Place bounding boxes around detected faces
+        for detection in results.detections:
+
+            # Obtain bounding box coordinates
+            coords = detection.location_data.relative_bounding_box
+            h, w, _ = img.shape
+            x, y, width, height = (coords.xmin * w, coords.ymin * h, 
+                                   coords.width * w, coords.height * h)
+
+            # Convert to integers for drawing
+            x, y, width, height = int(x), int(y), int(width), int(height)
+            
+            # Draw the bounding box
+            cv2.rectangle(img, (x, y), (x + width, y + height), (0, 0, 255), 2)
+
+    # Return the modified image
     return img
-    
+
