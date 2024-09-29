@@ -1,5 +1,5 @@
 import cv2
-from find_face import find_faces
+from find_faces import find_faces
 
 def demo():
     
