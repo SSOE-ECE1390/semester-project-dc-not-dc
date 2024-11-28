@@ -1,31 +1,35 @@
-import cv2
-from find_faces import find_faces
+import sys
+from attendance import take_attendance, save_attendance, save_png, save_jpeg
 
+"""
+Example showing how to use functions in attendance.py
+"""
 def demo():
+
+    # Check for proper command line arguments
+    if len(sys.argv) != 3 and len(sys.argv) != 4:
+        sys.exit("Usage: python demo.py -p path_to_image path_to_database")
+
+    # Check for private mode and prepare arguments
+    if sys.argv[1] == "-p":
+        private_mode = True
+        image_path = sys.argv[2]
+        database_path = sys.argv[3]
+    else:
+        private_mode = False
+        image_path = sys.argv[1]
+        database_path = sys.argv[2]
+
+    # Take attendance 
+    img, attendance_dict = take_attendance(image_path, database_path, private = private_mode)
+
+    # Save attendance CSV
+    save_attendance(attendance_dict, "attendance.csv")
+
+    # Save image
+    save_png(img, "image.png")
+    save_jpeg(img, "image.jpg")
     
-    # Single face detection
-    img = cv2.imread("Images/single_face.jpg")
-
-    # Place a bounding box around detected face
-    img = find_faces(img)
-
-    # Display image
-    cv2.imshow("Face Detection", img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-
-    # Multi-face detection
-    img = cv2.imread("Images/multiple_faces.jpg")
-
-    # Place a bounding box around detected faces
-    img = find_faces(img)
-
-    # Display image
-    cv2.imshow("Face Detection", img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-
-    return 0
 
 if __name__ == "__main__":
     demo()

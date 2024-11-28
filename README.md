@@ -3,19 +3,26 @@
 # ece-1390-project
 
 ## Description
-We will be creating an automatic attendance taker. We believe this will reduce the burden on class instructors, who often must set aside valuable lecture time to record attendance in classes where it is required. Additionally, the data from this attendance taker may offer insight into student attendance patterns over time and help identify at-risk students based on class attendance. The target consumer of the product is any user who may benefit from the ability to quickly collect and analyze attendance data for classes, meetings, and other scenarios. 
+We have created an automatic attendance taker. We believe this will reduce the burden on class instructors, who often must set aside valuable lecture time to record attendance in classes where it is required. Additionally, the data from this attendance taker may offer insight into student attendance patterns over time and help identify at-risk students based on class attendance. The target consumer of the product is any user who may benefit from the ability to quickly collect and analyze attendance data for classes, meetings, and other scenarios. 
 
 ## Code Specifications
-The expected input is a still frame image of file format .jpg and .png. The output of the program will be the input image with all faces within bounding boxes and a count of the total number of people in the image. There will also be an outputted .csv file indicating the name of each enrolled student and whether or not they have been counted as present.    
+The expected input is a still frame image of file format .jpg, .jpeg, or .png along with a database containing images of all expected attendees. An optional input enables Privacy Mode, which blurs all detected faces. There are functions that optionally save the attendees as a CSV file, and the resulting image may be saved as a .png or .jpg file. Our most important function, take_attendance, creates an image with bounding boxes around each face; it also attempts to label each face with a name pulled from that attendee's image in the database. If a matching face in the database isn't found, that attendee is marked as unidentified. The take_attendance function also returns a dictionary containing each name in the database and whether the associated attendee was found in the image or not (present or absent)      
 
-## Planned approach
-This project will be implemented with Python and OpenCV. As per the project specifications, we will include the ability to process still images, methods to enhance and filter the input image, and the use of edge detection, segmentation and object recognition. We plan to use YOLO for object detection and recognition. If we have time, we will include additional functionality: we will add the ability to include video input for dynamic attendance taking over time and annotate the bounding boxes with the names of the students.   
+## Approach
+This project was implemented with Python, OpenCV, and deepface. We tried several different libraries for the facial recognition feature - Haar cascades with OpenCV, MediaPipe, and finally deepface. Haar cascades were far too inaccurate for our use case while MediaPipe proved to be too limited. deepface is able to both find faces in an image and compare these faces to a database to check for a match, which suited our use case. OpenCV is used for supplemental functions like blurring in Privacy Mode and saving images in different formats.   
 
 ## Timeline
-We expect this progress to be completed over the course of the semester. By the end of this month, we plan to have object detection via bounding boxes implemented to recognize a person. By the end of October, we hope to recognize multiple distinct faces within an image and count the number of distinct faces. We also hope to include the other required methods - image filtering and enhancement, etc. By the end of November, we hope to have a coordinate system in place to map expected attendees to certain points in the image (for example, an assigned seat) and use this mapping system to determine if an expected attendee is present or not. We are aiming to have the entire project working by the end of November, leaving time for improvements and additions during December if desired.   
+We met our timeline goal of completing our base requirements by the end of November. We will work on final touches in December before presenting to the class. 
 
 ## Success Metrics
-We will define success as meeting the basic goals of the project: including all project requirements and achieving basic functionality (face detection and counting, location mapping). 
+OLD: We will define success as meeting the basic goals of the project: including all project requirements and achieving basic functionality (face detection and counting, location mapping). 
+UPDATED: When we discovered deepface, we realized we could make a much more robust attendance taker. Our original idea was to create an initial attendance board where faces would be mapped to expected location (it wouldn't be able to identify a specific face, just the presence of a generic face). An attendance photo would be fed in, and we would calculate whether a face was within the expected range. This would determine whether an attendee was present or absent. With deepface, we can search the entire image for specific faces, which only requires a pre-existing database of attendee images. It also removed our requirement that the attendance picture always be taken from the same angle. Our new solution is much more robust, and so we've decided that we have exceeded our original success metrics. 
 
 ## Pitfalls and alternative solutions
-We may face issues when designing a coordinate system that must match the location of a specific face to an expected location. If this occurs, we will redefine sucess to be identifying and counting faces, leaving the decision of who is actually present or absent to the instructor. 
+We faced pitfalls when deciding what face detection solution to use, but were able to pivot and find a satisfactory solution that actually improved our final attendance taker. We also struggled with time management but were able to create a project that met our requirements. 
+
+## Usage
+All relevant functions are in attendance.py. The file demo.py provides an example of how these functions may be used with command-line arguments. Run demo.py using:
+python demo.py path_to_image path_to_database
+An optional -p flag can be used to enable "privacy mode," where images are displayed and saved with the faces obscured by a blurring effect:
+python demo.py -p path_to_image path_to_database
