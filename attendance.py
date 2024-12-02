@@ -168,7 +168,7 @@ Creates expected attendee dictionary from database. Returns the dictionary with 
 (not present). 
 
 Parameters:
-    * Path to database.
+    * database_path: Path to database.
 """
 def create_attendee_dict(database_path):
     
