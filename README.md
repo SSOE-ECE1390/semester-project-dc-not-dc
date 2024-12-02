@@ -16,6 +16,7 @@ We met our timeline goal of completing our base requirements by the end of Novem
 
 ## Success Metrics
 OLD: We will define success as meeting the basic goals of the project: including all project requirements and achieving basic functionality (face detection and counting, location mapping). 
+
 UPDATED: When we discovered deepface, we realized we could make a much more robust attendance taker. Our original idea was to create an initial attendance board where faces would be mapped to expected location (it wouldn't be able to identify a specific face, just the presence of a generic face). An attendance photo would be fed in, and we would calculate whether a face was within the expected range. This would determine whether an attendee was present or absent. With deepface, we can search the entire image for specific faces, which only requires a pre-existing database of attendee images. It also removed our requirement that the attendance picture always be taken from the same angle. Our new solution is much more robust, and so we've decided that we have exceeded our original success metrics. 
 
 ## Pitfalls and alternative solutions
@@ -23,6 +24,9 @@ We faced pitfalls when deciding what face detection solution to use, but were ab
 
 ## Usage
 All relevant functions are in attendance.py. The file demo.py provides an example of how these functions may be used with command-line arguments. Run demo.py using:
+
 python demo.py path_to_image path_to_database
+
 An optional -p flag can be used to enable "privacy mode," where images are displayed and saved with the faces obscured by a blurring effect:
+
 python demo.py -p path_to_image path_to_database
