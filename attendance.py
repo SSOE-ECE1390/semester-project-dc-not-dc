@@ -76,7 +76,7 @@ def take_attendance(img_path, database_path, private = False):
         h = attendees[attendee][3]
 
         # Label the bounding box
-        cv2.putText(img, attendee, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 3.0, (0, 255, 0), 3)
+        cv2.putText(img, attendee, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2)
 
         # If in Privacy Mode, blur detected face
         if private:
