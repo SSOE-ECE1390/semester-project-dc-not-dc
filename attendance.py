@@ -157,7 +157,7 @@ def privacy_blur(img, x, y, w, h):
     face_region = img[y:y + h, x:x + w]
 
     # Apply Gaussian blur to the face 
-    blurred_face = cv2.GaussianBlur(face_region, (99, 99), 30)
+    blurred_face = cv2.GaussianBlur(face_region, (11, 11), 30)
 
     # Replace original face with blurred face
     img[y:y + h, x:x + w] = blurred_face
@@ -177,7 +177,7 @@ def create_attendee_dict(database_path):
     for filename in os.listdir(database_path):
 
         # Extract attendee name and create dictionary entry
-        if '.' in filename:
+        if '.' in filename and filename != "ds_model_vggface_detector_opencv_aligned_normalization_base_expand_0.pkl":
             name = filename.split('.')[0]
             attendance_dict[name] = False
 
